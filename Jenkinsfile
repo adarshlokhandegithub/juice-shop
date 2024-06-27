@@ -7,6 +7,7 @@ pipeline {
         //appName = 'juice-shop' // Azure Web App name
         resourceGroup = 'jenkins-rg' // Azure Resource Group
         dockerfilePath = './Dockerfile' // Path to your Dockerfile in the repo
+        azureCredentials = 'AzureServicePrincipal' // Azure Service Principal credentials
     }
     
     stages {
@@ -31,6 +32,22 @@ pipeline {
                 }
             }
         }
+
+      /*  stage('Deploy') {
+            steps {
+                script {
+                    // Authenticate with Azure using Azure Service Principal
+                    withCredentials([azureServicePrincipal(env.azureCredentials)]) {
+                        sh "az login --service-principal -u ${AZURE_CLIENT_ID} -p ${AZURE_CLIENT_SECRET} --tenant ${AZURE_TENANT_ID}"
+                        
+                        // Deploy Docker image to Azure Web App
+                        sh "az webapp config container set --name ${env.appName} --resource-group ${env.resourceGroup} --docker-custom-image-name ${env.dockerImage}"
+                        // Restart Azure Web App
+                        sh "az webapp restart --name ${env.appName} --resource-group ${env.resourceGroup}"
+                    }
+                }
+            }
+        } */
     }  
     
     post {
