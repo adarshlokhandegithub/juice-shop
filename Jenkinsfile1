@@ -15,8 +15,7 @@ pipeline {
           }
         }
       }
-
-      stage('Security Scan with Snyk') {
+    stage('Security Scan with Snyk') {
             steps {
                 withCredentials([string(credentialsId: 'SNYK_API_TOKEN', variable: 'SNYK_TOKEN')]) {
                     sh "snyk auth $SNYK_TOKEN"
