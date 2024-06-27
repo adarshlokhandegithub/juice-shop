@@ -5,6 +5,21 @@ pipeline {
       SNYK_API_TOKEN = credentials('SNYK_API_TOKEN')
     }
     stages {
+      stage('Prepare') {
+            steps {
+                // Clean workspace
+                cleanWs()
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/adarshlokhandegithub/juice-shop']])
+            }
+        }
+      stage('Security Scan with Snyk') {
+            steps {
+                withCredentials([string(credentialsId: 'SNYK_API_TOKEN', variable: 'SNYK_TOKEN')]) {
+                    sh "snyk auth $SNYK_TOKEN"
+                    sh "snyk test --json > snyk-report.json"
+                }
+            }
+        }
       stage('Semgrep-Scan') {
         steps {
                 sh '''docker pull semgrep/semgrep && \
@@ -14,13 +29,5 @@ pipeline {
                 semgrep/semgrep semgrep ci '''
           }
         }
-      }
-    stage('Security Scan with Snyk') {
-            steps {
-                withCredentials([string(credentialsId: 'SNYK_API_TOKEN', variable: 'SNYK_TOKEN')]) {
-                    sh "snyk auth $SNYK_TOKEN"
-                    sh "snyk test --json > snyk-report.json"
-                }
-            }
-        }
+    }
 }
