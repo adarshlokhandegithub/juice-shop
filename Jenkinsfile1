@@ -2,16 +2,26 @@ pipeline {
   agent any
     environment {
       SEMGREP_APP_TOKEN = credentials('SEMGREP_APP_TOKEN')
+      SNYK_API_TOKEN = credentials('SNYK_API_TOKEN')
     }
     stages {
       stage('Semgrep-Scan') {
         steps {
-            sh '''docker pull semgrep/semgrep && \
-            docker run \
-            -e SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN \
-            -v "$(pwd):$(pwd)" --workdir $(pwd) \
-            semgrep/semgrep semgrep ci '''
+                sh '''docker pull semgrep/semgrep && \
+                docker run \
+                -e SEMGREP_APP_TOKEN=$SEMGREP_APP_TOKEN \
+                -v "$(pwd):$(pwd)" --workdir $(pwd) \
+                semgrep/semgrep semgrep ci '''
+          }
+        }
       }
-    }
-  }
+
+      stage('Security Scan with Snyk') {
+            steps {
+                withCredentials([string(credentialsId: 'SNYK_API_TOKEN', variable: 'SNYK_TOKEN')]) {
+                    sh "snyk auth $SNYK_TOKEN"
+                    sh "snyk test --json > snyk-report.json"
+                }
+            }
+        }
 }
