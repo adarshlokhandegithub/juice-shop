@@ -4,7 +4,7 @@ pipeline {
     environment {
         registryCredential = 'ACR' // Credential ID for Azure Container Registry
         dockerImage = 'azjenkinsvmcr.azurecr.io/juice-shop' // Name of your Docker image
-        appName = 'juice-shop' // Azure Web App name
+        appName = 'juiceshopcicd' // Azure Web App name
         resourceGroup = 'jenkins-rg' // Azure Resource Group
         dockerfilePath = './Dockerfile' // Path to your Dockerfile in the repo
         azureCredentials = 'AzureServicePrincipal' // Azure Service Principal credentials
@@ -59,7 +59,7 @@ pipeline {
         }
 
         
-        stage('Deploy') {
+       /* stage('Deploy') {
             steps {
                 script {
                     // Authenticate with Azure using Azure Service Principal
@@ -74,7 +74,7 @@ pipeline {
                 }
             }
         }
-    }  
+    }  */
     
     post {
         success {
