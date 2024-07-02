@@ -1,0 +1,32 @@
+Example Cleanup Commands
+Here are some example commands you can use to clean up specific areas:
+
+Clean Jenkins Workspaces
+bash
+Copy code
+# Clean up workspaces for a specific job
+rm -rf /var/lib/jenkins/workspace/<your_job_name>/*
+
+# Clean up all workspaces
+rm -rf /var/lib/jenkins/workspace/*
+Clean Jenkins Cache
+bash
+Copy code
+# Clean up Jenkins caches (adjust paths based on your Jenkins installation)
+rm -rf /var/cache/jenkins/*
+
+# Clean up Jenkins logs
+rm -rf /var/log/jenkins/*
+Clean Docker Resources (if applicable)
+If Docker is running on your Jenkins server or agent, Docker containers, images, and volumes may also consume disk space. Clean them up using Docker commands:
+
+bash
+Copy code
+# Remove all stopped containers
+docker container prune -f
+
+# Remove all unused images
+docker image prune -a -f
+
+# Remove all unused volumes
+docker volume prune -f
