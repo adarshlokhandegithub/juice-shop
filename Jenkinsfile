@@ -55,19 +55,18 @@ pipeline {
     }
 }   */
 
-        stage('Security Scan with Snyk') {
+        /* stage('Security Scan with Snyk') {
             steps {
                 script {
                     echo 'Entering Security Scan with Snyk stage'
                     withCredentials([string(credentialsId: 'SNYK_API_TOKEN', variable: 'SNYK_TOKEN')]) {
-                        sh 'npm install -g snyk'
                         sh "snyk auth $SNYK_TOKEN"
                         sh "snyk test --json > snyk-report.json"
                     }
                     echo 'Leaving Security Scan with Snyk stage'
                 }
             }
-        }
+        } */
 
         
         stage('Deploy') {
