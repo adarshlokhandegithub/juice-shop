@@ -61,7 +61,7 @@ pipeline {
                     echo 'Entering Security Scan with Snyk stage'
                     withCredentials([string(credentialsId: 'SNYK_API_TOKEN', variable: 'SNYK_TOKEN')]) {
                         sh "snyk auth $SNYK_TOKEN"
-                        sh "snyk test --json > snyk-report.json"
+                        sh "snyk test --json > snyk-reportdata.json"
                     }
                     echo 'Leaving Security Scan with Snyk stage'
                 }
