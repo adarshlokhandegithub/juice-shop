@@ -15,15 +15,20 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
-                // Clean workspace
-                cleanWs()
-                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/adarshlokhandegithub/juice-shop']])
+                script {
+                    echo 'Entering Prepare stage'
+                    // Clean workspace
+                    cleanWs()
+                    checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/adarshlokhandegithub/juice-shop']])
+                    echo 'Leaving Prepare stage'
+                }
             }
         }
         
         stage('Build') {
             steps {
                 script {
+                    echo 'Entering Build stage'
                     // Build Docker image using Dockerfile
                     def dockerImage = docker.build(env.dockerImage, "--file ${env.dockerfilePath} .")
                     // Login to Azure Container Registry
@@ -31,6 +36,7 @@ pipeline {
                         // Push built Docker image to Azure Container Registry
                         dockerImage.push()
                     }
+                    echo 'Leaving Build stage'
                 }
             }
         }
@@ -51,17 +57,22 @@ pipeline {
 
         stage('Security Scan with Snyk') {
             steps {
-                withCredentials([string(credentialsId: 'SNYK_API_TOKEN', variable: 'SNYK_TOKEN')]) {
-                    sh "snyk auth $SNYK_TOKEN"
-                    sh "snyk test --json > snyk-report.json"
+                script {
+                    echo 'Entering Security Scan with Snyk stage'
+                    withCredentials([string(credentialsId: 'SNYK_API_TOKEN', variable: 'SNYK_TOKEN')]) {
+                        sh "snyk auth $SNYK_TOKEN"
+                        sh "snyk test --json > snyk-report.json"
+                    }
+                    echo 'Leaving Security Scan with Snyk stage'
                 }
             }
         }
 
         
-       /* stage('Deploy') {
+        stage('Deploy') {
             steps {
                 script {
+                    echo 'Entering Deploy stage'
                     // Authenticate with Azure using Azure Service Principal
                     withCredentials([azureServicePrincipal(env.azureCredentials)]) {
                         sh "az login --service-principal -u ${AZURE_CLIENT_ID} -p ${AZURE_CLIENT_SECRET} --tenant ${AZURE_TENANT_ID}"
@@ -71,9 +82,10 @@ pipeline {
                         // Restart Azure Web App
                         sh "az webapp restart --name ${env.appName} --resource-group ${env.resourceGroup}"
                     }
+                    echo 'Leaving Deploy stage'
                 }
             }
-        } */
+        }
     }  
     
     post {
