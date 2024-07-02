@@ -40,22 +40,22 @@ pipeline {
                 }
             }
         }
+        
+        /* stage('Semgrep-Scan') {
+            steps {
+                script {
+                    docker.pull('returntocorp/semgrep:latest')
+                    docker.image('returntocorp/semgrep:latest').run(
+                        "--rm -e SEMGREP_APP_TOKEN=${SEMGREP_APP_TOKEN} " +
+                        "-v /var/lib/jenkins/workspace/NodeJS\\ Game\\ APP:/var/lib/jenkins/workspace/NodeJS\\ Game\\ APP " +
+                        "--workdir /var/lib/jenkins/workspace/NodeJS\\ Game\\ APP " +
+                        "semgrep ci"
+                    )
+                }
+            }
+        } */
 
-      /*  stage('Semgrep-Scan') {
-    steps {
-        script {
-            docker.pull('returntocorp/semgrep:latest')
-            docker.image('returntocorp/semgrep:latest').run(
-                "--rm -e SEMGREP_APP_TOKEN=${SEMGREP_APP_TOKEN} " +
-                "-v /var/lib/jenkins/workspace/NodeJS\\ Game\\ APP:/var/lib/jenkins/workspace/NodeJS\\ Game\\ APP " +
-                "--workdir /var/lib/jenkins/workspace/NodeJS\\ Game\\ APP " +
-                "semgrep ci"
-            )
-        }
-    }
-}   */
-
-        /* stage('Security Scan with Snyk') {
+        stage('Security Scan with Snyk') {
             steps {
                 script {
                     echo 'Entering Security Scan with Snyk stage'
@@ -66,7 +66,7 @@ pipeline {
                     echo 'Leaving Security Scan with Snyk stage'
                 }
             }
-        } */
+        }
 
         
         stage('Deploy') {
